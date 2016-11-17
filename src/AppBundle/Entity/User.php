@@ -86,11 +86,17 @@ class User implements UserInterface
      */
     private $entries;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Food", mappedBy="user")
+     */
+    private $foods;
+
     public function __construct()
     {
         $this->correctionFactors = new ArrayCollection();
         $this->ratios = new ArrayCollection();
         $this->entries = new ArrayCollection();
+        $this->foods = new ArrayCollection();
     }
 
     /**
@@ -258,6 +264,12 @@ class User implements UserInterface
         $this->updatedAt = $updatedAt;
     }
 
-
+    /**
+     * @return mixed
+     */
+    public function getFoods()
+    {
+        return $this->foods;
+    }
 
 }

@@ -52,5 +52,29 @@
         </div>
     </div>
 
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <a href="{{ path('food_new') }}" class="btn btn-primary pull-right">Add New</a>
+            <h2 class="panel-title">Foods</h2>
+        </div>
+        <div class="panel-body">
+            {% if user.foods.count %}
+                <ul class="list-group">
+                    {% for item in user.foods %}
+                        <li class="list-group-item">
+                            <a href="{{ path('food_edit', { id: item.id }) }}">
+                                {{ item.name }} ({{ item.carbs }} g carbs)
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-warning">
+                    You haven't entered any foods yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}
 
