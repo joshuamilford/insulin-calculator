@@ -1,0 +1,14 @@
+- [ ] organize models
+- [x] forgot password
+- [x] display entries list
+- [x] organize/normalize views/controllers/routes
+- [x] access control
+- [x] add notes to entry
+- [x] figure out timezones
+- [x] edit profile
+- [x] remove username
+- [x] registration
+- [x] form class for login
+- [x] logout
+- [x] login after register
+- [x] add timestamps to users

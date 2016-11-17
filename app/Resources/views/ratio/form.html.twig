@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+
+        <h1 class="page-header">Ratios</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        {{ form_end(form) }}
+
+        {% if logs is defined and logs|length > 0 %}
+            <h2>History</h2>
+            <ul class="list-group">
+                {% for log in logs %}
+                    <li class="list-group-item">
+                        On {{ log.loggedAt|date('Y-m-d H:i:s') }} the carbs was set to {{ log.data.carbs }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

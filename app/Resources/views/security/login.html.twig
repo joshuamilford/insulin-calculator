@@ -1,0 +1,31 @@
+{# app/Resources/views/security/login.html.twig #}
+{# ... you will probably extend your base template, like base.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+
+        <h1 class="page-header">
+            Log In
+        </h1>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="form-group">
+            <button type="submit" class="btn btn-default">Log In</button> or <a href="{{ path('register') }}">Register</a>
+        </div>
+        {{ form_end(form) }}
+        <p><a href="{{ path('password_forgot') }}">Forgot your password?</a></p>
+    </div>
+</div>
+
+{% endblock %}

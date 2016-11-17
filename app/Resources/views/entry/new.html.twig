@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+
+    {% if entry.calculatedUnits %}
+
+        <div class="jumbotron">
+            <h1>{{ entry.calculatedUnits|number_format(2) }}</h1>
+        </div>
+
+        <div class="alert alert-success">
+            <p>The recommended number of units is {{ entry.calculatedUnits }}. Here's the math:</p>
+            <ul>
+                <li>Using the {{ entry.name }} ratio, you should get 1 unit for every {{ entry.ratio }} carbs</li>
+                <li>{{ entry.carbs }} carbs / {{ entry.ratio }} = {{ entry.carbs / entry.ratio }} units</li>
+                {% if entry.correctionUnits %}
+                    <li>Additionally, since your blood glucose level was at least {{ entry.correctionThreshold}}, you get an additional {{ entry.correctionUnits }} units.</li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.ratio) }}
+    {{ form_row(form.bgl) }}
+    {{ form_row(form.carbs) }}
+
+    {% if entry.calculatedUnits %}
+        <div class="form-group">
+            {{ form_label(form.actualUnits) }}
+            {{ form_errors(form.actualUnits) }}
+            {{ form_widget(form.actualUnits, { 'value': entry.calculatedUnits ? entry.calculatedUnits : '' }) }}
+        </div>
+    {% else %}
+        {% do form.actualUnits.setRendered %}
+        {% do form.notes.setRendered %}
+    {% endif %}
+
+    {% if entry.calculatedUnits %}
+        {{ form_row(form.notes) }}
+    {% endif %}
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Calculate</button>
+        {% if entry.calculatedUnits %}
+            <button type="submit" class="btn btn-primary" name="save" value="1">Save</button>
+        {% endif %}
+    </div>
+
+    {{ form_end(form) }}
+
+    </div>
+</div>
+
+{% endblock %}

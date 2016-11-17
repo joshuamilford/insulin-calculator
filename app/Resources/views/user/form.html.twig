@@ -1,0 +1,22 @@
+{# app/Resources/views/security/login.html.twig #}
+{# ... you will probably extend your base template, like base.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+
+            <h1 class="page-header">
+                {{ user.id ? 'Profile' : 'Register' }}
+            </h1>
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-default">{{ user.id ? 'Save' : 'Register' }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

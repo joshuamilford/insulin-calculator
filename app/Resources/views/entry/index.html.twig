@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<a href="{{ path('entry_new') }}" class="btn btn-primary pull-right">New</a>
+<h1 class="page-header">My Entries</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Date</td>
+            <td>Name</td>
+            <td>BGL</td>
+            <td>Carbs</td>
+            <td>Insulin Given</td>
+            <td>Notes</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in app.user.entries %}
+        <tr>
+            <td>{{ entry.createdAt|date('F j, Y g:i a') }}</td>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.bgl }}</td>
+            <td>{{ entry.carbs }}</td>
+            <td>{{ entry.actualUnits }}</td>
+            <td>{{ entry.notes }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
