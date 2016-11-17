@@ -27,11 +27,13 @@ class CorrectionFactor
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
     private $units;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
     private $threshold;
 
