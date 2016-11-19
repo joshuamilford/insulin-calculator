@@ -33,4 +33,4 @@ security:
         - { path: ^/register, allow_if: "is_anonymous()" }
         - { path: ^/forgot-password, allow_if: "is_anonymous()" }
         - { path: ^/reset-password, allow_if: "is_anonymous()" }
-#        - { path: ^/, roles: 'ROLE_USER' }
+        - { path: ^/, roles: 'ROLE_USER' }
