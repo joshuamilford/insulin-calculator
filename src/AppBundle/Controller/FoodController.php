@@ -36,7 +36,7 @@ class FoodController extends Controller
             return $this->redirectToRoute('settings');
         }
 
-        return $this->render('ratio/form.html.twig', [
+        return $this->render('food/form.html.twig', [
             'form' => $form->createView(),
             'food' => $food
         ]);
@@ -66,7 +66,7 @@ class FoodController extends Controller
             return $this->redirectToRoute('settings');
         }
 
-        return $this->render('ratio/form.html.twig', [
+        return $this->render('food/form.html.twig', [
             'form' => $form->createView(),
             'food' => $food
         ]);

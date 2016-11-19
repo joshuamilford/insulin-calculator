@@ -7,15 +7,15 @@
 
     {% if entry.calculatedUnits %}
 
-        <div class="jumbotron">
+        <div class="jumbotron text-center">
             <h1>{{ entry.calculatedUnits|number_format(2) }}</h1>
         </div>
 
         <div class="alert alert-success">
-            <p>The recommended number of units is {{ entry.calculatedUnits }}. Here's the math:</p>
+            <p>The recommended number of units is {{ entry.calculatedUnits|number_format(2) }}. Here's the math:</p>
             <ul>
                 <li>Using the {{ entry.name }} ratio, you should get 1 unit for every {{ entry.ratio }} carbs</li>
-                <li>{{ entry.carbs }} carbs / {{ entry.ratio }} = {{ entry.carbs / entry.ratio }} units</li>
+                <li>{{ entry.carbs }} carbs / {{ entry.ratio }} = {{ (entry.carbs / entry.ratio)|number_format(2) }} units</li>
                 {% if entry.correctionUnits %}
                     <li>Additionally, since your blood glucose level was at least {{ entry.correctionThreshold}}, you get an additional {{ entry.correctionUnits }} units.</li>
                 {% endif %}
@@ -24,16 +24,29 @@
     {% endif %}
 
     {{ form_start(form) }}
+        {{ form_errors(form) }}
 
-    {{ form_row(form.ratio) }}
-    {{ form_row(form.bgl) }}
-    {{ form_row(form.carbs) }}
+        <h3>Foods</h3>
+        <ul class="entryFoods list-unstyled" data-prototype="{{ form_widget(form.entryFoods.vars.prototype)|e('html_attr') }}">
+            {% for food in form.entryFoods %}
+                <li class="well">
+                    {{ form_row(food.food) }}
+                    {{ form_row(food.newFood) }}
+                    {{ form_row(food.carbs) }}
+                    {{ form_row(food.servings) }}
+                </li>
+            {% endfor %}
+            {% do form.entryFoods.setRendered %}
+        </ul>
+
+        {{ form_row(form.bgl) }}
+        {{ form_row(form.ratio) }}
 
     {% if entry.calculatedUnits %}
         <div class="form-group">
             {{ form_label(form.actualUnits) }}
             {{ form_errors(form.actualUnits) }}
-            {{ form_widget(form.actualUnits, { 'value': entry.calculatedUnits ? entry.calculatedUnits : '' }) }}
+            {{ form_widget(form.actualUnits, { 'value': entry.actualUnits ? entry.actualUnits : entry.calculatedUnits|number_format(2) }) }}
         </div>
     {% else %}
         {% do form.actualUnits.setRendered %}
@@ -53,7 +66,118 @@
 
     {{ form_end(form) }}
 
+
+
     </div>
 </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        var $collectionHolder;
+
+        // setup an "add a tag" link
+        var $addTagLink = $('<a href="#" class="add_entryFood_link btn btn-default">Add a Food</a>');
+        var $newLinkLi = $('<li></li>').append($addTagLink);
+
+        var $foodList = {{ foodList|raw }};
+
+
+        jQuery(document).ready(function() {
+
+            $('.newFood').each(function(){
+                $container = $(this).closest('.form-group');
+                if($container.find('input').val()) {
+                    $container.prev('.form-group').hide();
+                } else {
+                    $container.hide();
+                }
+            });
+
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.entryFoods');
+
+            $collectionHolder.find('li').each(function() {
+                addTagFormDeleteLink($(this));
+                addNewOption($(this));
+            });
+
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addTagLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag form (see next code block)
+                addTagForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        $('.entryFoods').on('change', '.currentFoods', function(){
+            if ($(this).val() == 'new') {
+                $(this).val('');
+                $current = $(this).closest('.form-group');
+                $new = $current.next('.form-group');
+                $current.hide();
+                $new.show();
+            } else {
+                for(var i = 0; i < $foodList.length; i++){
+                    if($foodList[i].id == $(this).val()){
+                        $carbs = $foodList[i].carbs;
+                    }
+                }
+                $(this).closest('li').find('.foodCarbs').val($carbs);
+            }
+        });
+
+        function addTagForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li class="well"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addTagFormDeleteLink($newFormLi);
+            addNewOption($newFormLi);
+            $newFormLi.find('.newFood').closest('.form-group').hide();
+        }
+
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#" class="btn btn-danger">Remove</a>');
+            $tagFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag form
+                $tagFormLi.remove();
+            });
+        }
+
+        function addNewOption($tagFormLi) {
+            var $newOption = $('<option value="new">Add New</option>');
+            $tagFormLi.find('select').append($newOption);
+        }
+
+    </script>
 
 {% endblock %}

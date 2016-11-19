@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\EntryFood;
+use AppBundle\Entity\Food;
+use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +36,26 @@ class EntryController extends Controller
         $entry = new Entry();
         $entry->setUser($this->getUser());
 
+        return $this->save($request, $entry);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="entry_edit")
+     * @Security("user == entry.getUser()")
+     */
+    public function editAction(Request $request, Entry $entry)
+    {
+        return $this->save($request, $entry);
+    }
+
+    private function save(Request $request, Entry $entry)
+    {
+
+        $originalEntryFoods = new ArrayCollection();
+        foreach ($entry->getEntryFoods() as $entryFood) {
+            $originalEntryFoods->add($entryFood);
+        }
+
         $form = $this->createForm(EntryType::class, $entry);
 
         $form->handleRequest($request);
@@ -46,6 +70,25 @@ class EntryController extends Controller
             if ($request->request->get('save')) {
 
                 $em = $this->getDoctrine()->getManager();
+
+                $data = $form->getData();
+                foreach ($data->getEntryFoods() as $food) {
+                    if (null === $food->getFood() && !empty($food->getNewFood())) {
+                        $newFood = new Food();
+                        $newFood->setCarbs($food->getCarbs());
+                        $newFood->setName($food->getNewFood());
+                        $newFood->setUser($this->getUser());
+                        $food->setFood($newFood);
+                        $em->persist($newFood);
+                    }
+                }
+
+                foreach ($originalEntryFoods as $entryFood) {
+                    if (false === $entry->getEntryFoods()->contains($entryFood)) {
+                        $em->remove($entryFood);
+                    }
+                }
+
                 $em->persist($entry);
                 $em->flush();
 
@@ -58,6 +101,7 @@ class EntryController extends Controller
         return $this->render('entry/new.html.twig', [
             'form' => $form->createView(),
             'entry' => $entry,
+            'foodList' => json_encode($this->getDoctrine()->getRepository('AppBundle:Food')->findAll())
         ]);
     }
 }

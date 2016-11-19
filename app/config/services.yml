@@ -15,3 +15,6 @@ services:
         autowire: true
         tags:
             - { name: doctrine.event_subscriber }
+    app.create_food_service:
+        class: AppBundle\Service\create_food_service
+        autowire: true

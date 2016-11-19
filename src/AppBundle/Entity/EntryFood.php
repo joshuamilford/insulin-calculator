@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="food")
+ * @ORM\Table(name="entry_food")
  */
-class Food implements \JsonSerializable
+class EntryFood
 {
     /**
      * @ORM\Id
@@ -21,21 +21,14 @@ class Food implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank()
      */
     private $carbs;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private $notes;
+    private $servings;
 
     /**
      * @ORM\Column(type="datetime")
@@ -50,9 +43,16 @@ class Food implements \JsonSerializable
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="foods")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Entry", inversedBy="entryFoods")
      */
-    private $user;
+    private $entry;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Food")
+     */
+    private $food;
+
+    private $newFood;
 
     /**
      * @return mixed
@@ -60,22 +60,6 @@ class Food implements \JsonSerializable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -97,17 +81,33 @@ class Food implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getNotes()
+    public function getServings()
     {
-        return $this->notes;
+        return $this->servings;
     }
 
     /**
-     * @param mixed $notes
+     * @param mixed $servings
      */
-    public function setNotes($notes)
+    public function setServings($servings)
     {
-        $this->notes = $notes;
+        $this->servings = $servings;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntry()
+    {
+        return $this->entry;
+    }
+
+    /**
+     * @param mixed $entry
+     */
+    public function setEntry($entry)
+    {
+        $this->entry = $entry;
     }
 
     /**
@@ -145,31 +145,35 @@ class Food implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getUser()
+    public function getFood()
     {
-        return $this->user;
+        return $this->food;
     }
 
     /**
-     * @param mixed $user
+     * @param mixed $food
      */
-    public function setUser(User $user)
+    public function setFood($food)
     {
-        $this->user = $user;
+        $this->food = $food;
     }
 
-    function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function getNewFood()
     {
-        return [
-            'id' => $this->id,
-            'carbs' => $this->carbs
-        ];
+        return $this->newFood;
     }
 
-    public function __toString()
+    /**
+     * @param mixed $newFood
+     */
+    public function setNewFood($newFood)
     {
-        return $this->name.' ('.$this->carbs.')';
+        $this->newFood = $newFood;
     }
+
 
 
 }

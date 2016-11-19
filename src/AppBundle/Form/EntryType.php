@@ -4,8 +4,10 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Entry;
 use AppBundle\Entity\Ratio;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -21,7 +23,12 @@ class EntryType extends AbstractType
                 'mapped' => false
             ])
             ->add('bgl')
-            ->add('carbs')
+            ->add('entryFoods', CollectionType::class, [
+                'entry_type' => EntryFoodType::class,
+                'allow_add' => true,
+                'by_reference' => false,
+                'allow_delete' => true
+            ])
             ->add('actualUnits', null, [
                 'label' => 'Units',
                 'required' => false

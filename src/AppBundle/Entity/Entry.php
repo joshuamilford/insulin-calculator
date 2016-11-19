@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -53,6 +54,7 @@ class Entry
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
     private $actualUnits = 0;
 
@@ -87,6 +89,17 @@ class Entry
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EntryFood", mappedBy="entry", cascade={"persist"})
+     */
+    private $entryFoods;
+
+    public function __construct()
+    {
+        $this->entryFoods = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -242,6 +255,12 @@ class Entry
 
     public function setUnits()
     {
+
+        $this->carbs = 0;
+        foreach ($this->entryFoods as $food) {
+            $this->carbs += ($food->getCarbs() * $food->getServings());
+        }
+
         $correctionFactors = $this->user->getCorrectionFactors();
         $preCalculated = $this->carbs / $this->ratio;
         $correction = false;
@@ -312,6 +331,23 @@ class Entry
         $this->notes = $notes;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEntryFoods()
+    {
+        return $this->entryFoods;
+    }
 
+    public function addEntryFood(EntryFood $entryFood)
+    {
+        $entryFood->setEntry($this);
+        $this->entryFoods->add($entryFood);
+    }
+
+    public function removeEntryFood(EntryFood $entryFood)
+    {
+        $this->entryFoods->removeElement($entryFood);
+    }
 
 }
