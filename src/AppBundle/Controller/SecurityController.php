@@ -87,7 +87,7 @@ class SecurityController extends Controller
 
             $message = \Swift_Message::newInstance()
                 ->setSubject('Reset Your Password')
-                ->setFrom('send@example.com')
+                ->setFrom(['joshua.milford@gmail.com' => 'Insulin Calculator'])
                 ->setTo($user->getEmail())
                 ->setBody(
                     '<p>Please visit <a href="'.$url.'">'.$url.'</a> to reset your password.</p>'
