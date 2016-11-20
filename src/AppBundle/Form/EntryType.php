@@ -7,7 +7,11 @@ use AppBundle\Entity\Ratio;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -20,7 +24,8 @@ class EntryType extends AbstractType
         $builder
             ->add('ratio', EntityType::class, [
                 'class' => Ratio::class,
-                'mapped' => false
+                'mapped' => false,
+                'required' => false
             ])
             ->add('bgl')
             ->add('entryFoods', CollectionType::class, [
@@ -35,6 +40,21 @@ class EntryType extends AbstractType
             ])
             ->add('notes', null, [
                 'required' => false
+            ])
+            ->add('createdAt', DateTimeType::class, [
+                'label' => 'Date',
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                'input' => 'datetime',
+                'view_timezone' => 'America/Chicago'
+            ])
+            ->add('calculate', SubmitType::class, [
+                'validation_groups' => false,
+                'attr' => ['formnovalidate' => true]
+            ])
+            ->add('save', SubmitType::class, [
+                'validation_groups' => ['Default', 'save'],
+                'attr' => ['formnovalidate' => true]
             ]);
     }
 

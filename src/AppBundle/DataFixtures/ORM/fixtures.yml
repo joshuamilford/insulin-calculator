@@ -1,0 +1,5 @@
+AppBundle\Entity\User:
+    user_{1}:
+        email: joshua.milford@gmail.com
+        plain_password: joshua
+        name: Joshua

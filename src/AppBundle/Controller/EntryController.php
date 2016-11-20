@@ -62,12 +62,13 @@ class EntryController extends Controller
         if($form->isValid()) {
 
             $ratio = $form->get('ratio')->getData();
-
-            $entry->setRatio($ratio->getCarbs());
-            $entry->setName($ratio->getName());
+            if ($ratio) {
+                $entry->setRatio($ratio->getCarbs());
+                $entry->setName($ratio->getName());
+            }
             $entry->setUnits();
 
-            if ($request->request->get('save')) {
+            if ($form->get('save')->isClicked()) {
 
                 $em = $this->getDoctrine()->getManager();
 

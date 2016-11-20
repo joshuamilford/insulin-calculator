@@ -27,7 +27,7 @@ class Entry
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $name;
 
@@ -40,27 +40,28 @@ class Entry
     /**
      * @ORM\Column(type="float")
      */
-    private $carbs;
+    private $carbs = 0;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $ratio;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $calculatedUnits;
+    private $calculatedUnits = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"save"})
      */
     private $actualUnits = 0;
 
     /**
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\DateTime()
      */
     private $createdAt;
 
@@ -99,6 +100,7 @@ class Entry
     public function __construct()
     {
         $this->entryFoods = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -255,7 +257,9 @@ class Entry
 
     public function setUnits()
     {
-
+        if (!$this->ratio) {
+            return;
+        }
         $this->carbs = 0;
         foreach ($this->entryFoods as $food) {
             $this->carbs += ($food->getCarbs() * $food->getServings());

@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
 
-    {% if entry.calculatedUnits %}
+    {% if entry.ratio %}
 
         <div class="jumbotron text-center">
             <h1>{{ entry.calculatedUnits|number_format(2) }}</h1>
@@ -21,6 +21,7 @@
                 {% endif %}
             </ul>
         </div>
+
     {% endif %}
 
     {{ form_start(form) }}
@@ -42,26 +43,27 @@
         {{ form_row(form.bgl) }}
         {{ form_row(form.ratio) }}
 
-    {% if entry.calculatedUnits %}
+
         <div class="form-group">
             {{ form_label(form.actualUnits) }}
             {{ form_errors(form.actualUnits) }}
             {{ form_widget(form.actualUnits, { 'value': entry.actualUnits ? entry.actualUnits : entry.calculatedUnits|number_format(2) }) }}
         </div>
-    {% else %}
-        {% do form.actualUnits.setRendered %}
-        {% do form.notes.setRendered %}
-    {% endif %}
 
-    {% if entry.calculatedUnits %}
-        {{ form_row(form.notes) }}
-    {% endif %}
+    {{ form_row(form.notes) }}
+
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(form.createdAt.date) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.createdAt.time) }}
+            </div>
+        </div>
 
     <div class="form-group">
-        <button type="submit" class="btn btn-default">Calculate</button>
-        {% if entry.calculatedUnits %}
-            <button type="submit" class="btn btn-primary" name="save" value="1">Save</button>
-        {% endif %}
+        {{ form_widget(form.calculate) }}
+        {{ form_widget(form.save, {'attr': {'class': 'btn-primary'}}) }}
     </div>
 
     {{ form_end(form) }}
