@@ -1,0 +1,14 @@
+{
+  "name": "t1dtracker",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:joshuamilford/insulin-calculator.git",
+  "author": "Joshua Milford <joshua@joshuamilford.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-livereload": "^3.8.1",
+    "gulp-sass": "^2.3.2",
+    "gulp-watch": "^4.3.11"
+  }
+}
