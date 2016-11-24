@@ -2,32 +2,24 @@
 
 {% block body %}
 
-<a href="{{ path('entry_new') }}" class="btn btn-primary pull-right">New</a>
 <h1 class="page-header">My Entries</h1>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <td>Date</td>
-            <td>Name</td>
-            <td>BGL</td>
-            <td>Carbs</td>
-            <td>Insulin Given</td>
-            <td>Notes</td>
-        </tr>
-    </thead>
-    <tbody>
+<p><a href="{{ path('entry_new') }}" class="btn btn-primary pull-right">Add a New Entry</a></p>
+
         {% for entry in app.user.entries %}
-        <tr>
-            <td><a href="{{ path('entry_edit', {'id': entry.id}) }}">{{ entry.createdAt|date('F j, Y g:i a') }}</a></td>
-            <td>{{ entry.name }}</td>
-            <td>{{ entry.bgl }}</td>
-            <td>{{ entry.carbs }}</td>
-            <td>{{ entry.actualUnits }}</td>
-            <td>{{ entry.notes }}</td>
-        </tr>
+        <div class="panel">
+            <div class="panel-heading">
+                <a href="{{ path('entry_edit', {'id': entry.id}) }}">{{ entry.createdAt|date('F j, Y g:i a') }}</a><br>
+            </div>
+            <div class="panel-body">
+            BGL: {{ entry.bgl }}<br>
+            Carbs: {{ entry.carbs }}<br>
+            Units: {{ entry.actualUnits }}
+            {% if entry.notes %}
+            <br>Notes: {{ entry.notes }}
+            {% endif %}
+            </div>
+        </div>
         {% endfor %}
-    </tbody>
-</table>
 
 {% endblock %}

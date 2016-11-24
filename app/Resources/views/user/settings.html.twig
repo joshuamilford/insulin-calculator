@@ -6,7 +6,6 @@
 
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <a href="{{ path('ratio_new') }}" class="btn btn-primary pull-right">Add New</a>
             <h2 class="panel-title">Ratios</h2>
         </div>
         <div class="panel-body">
@@ -25,12 +24,12 @@
                     You haven't entered any ratios yet.
                 </div>
             {% endif %}
+            <a href="{{ path('ratio_new') }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <a href="{{ path('correction_factor_new') }}" class="btn btn-primary pull-right">Add New</a>
             <h2 class="panel-title">Correction Factors</h2>
         </div>
         <div class="panel-body">
@@ -49,12 +48,12 @@
                 You haven't entered any correction factors yet.
             </div>
             {% endif %}
+            <a href="{{ path('correction_factor_new') }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <a href="{{ path('food_new') }}" class="btn btn-primary pull-right">Add New</a>
             <h2 class="panel-title">Foods</h2>
         </div>
         <div class="panel-body">
@@ -73,6 +72,7 @@
                     You haven't entered any foods yet.
                 </div>
             {% endif %}
+            <a href="{{ path('food_new') }}" class="btn btn-primary pull-right">Add New</a>
         </div>
     </div>
 
