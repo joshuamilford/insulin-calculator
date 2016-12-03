@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
         <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -54,6 +55,7 @@
                 $('.nav-toggle').click(function(){
                     $('.header-nav').slideToggle(250);
                 });
+
             </script>
             {% block javascripts %}{% endblock %}
         </div>

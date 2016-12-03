@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
 <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
 
@@ -24,31 +23,60 @@
 
     {% endif %}
 
+        {% macro entryFoodsCollectionItem(formData) %}
+                {{ form_row(formData.food) }}
+                {{ form_row(formData.newFood) }}
+                <div class="form-row">
+                    <div class="form-column">
+                        {{ form_row(formData.carbs) }}
+                    </div>
+                    <div class="form-column">
+                        {{ form_row(formData.servings) }}
+                    </div>
+                </div>
+        {% endmacro %}
+
+
     {{ form_start(form) }}
+
         {{ form_errors(form) }}
 
-        <h3>Foods</h3>
-        <ul class="entryFoods list-unstyled" data-prototype="{{ form_widget(form.entryFoods.vars.prototype)|e('html_attr') }}">
+        <label>Foods</label>
+        <ul class="entryFoods list-unstyled" data-prototype="{{ _self.entryFoodsCollectionItem(form.entryFoods.vars.prototype)|e('html_attr') }}">
             {% for food in form.entryFoods %}
-                <li class="well">
-                    {{ form_row(food.food) }}
-                    {{ form_row(food.newFood) }}
-                    {{ form_row(food.carbs) }}
-                    {{ form_row(food.servings) }}
+                <li class="well food-item">
+                {{ _self.entryFoodsCollectionItem(food) }}
                 </li>
             {% endfor %}
             {% do form.entryFoods.setRendered %}
         </ul>
 
-        {{ form_row(form.bgl) }}
-        {{ form_row(form.ratio) }}
-
-
-        <div class="form-group">
-            {{ form_label(form.actualUnits) }}
-            {{ form_errors(form.actualUnits) }}
-            {{ form_widget(form.actualUnits, { 'value': entry.actualUnits ? entry.actualUnits : entry.calculatedUnits|number_format(2) }) }}
+        <div class="form-row">
+            <div class="form-column">
+                {{ form_row(form.bgl) }}
+            </div>
+            <div class="form-column">
+                {{ form_row(form.ratio) }}
+            </div>
         </div>
+
+
+        <div class="form-row">
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_label(form.actualUnits) }}
+                    {{ form_errors(form.actualUnits) }}
+                    {{ form_widget(form.actualUnits, { 'value': entry.actualUnits ? entry.actualUnits : entry.calculatedUnits|number_format(2) }) }}
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="form-group">
+                    {{ form_widget(form.calculate) }}
+                </div>
+            </div>
+        </div>
+
+    {{ form_row(form.tags) }}
 
     {{ form_row(form.notes) }}
 
@@ -62,7 +90,6 @@
         </div>
 
     <div class="form-group">
-        {{ form_widget(form.calculate) }}
         {{ form_widget(form.save, {'attr': {'class': 'btn-primary'}}) }}
     </div>
 
@@ -82,7 +109,7 @@
 
         // setup an "add a tag" link
         var $addTagLink = $('<a href="#" class="add_entryFood_link btn btn-default">Add a Food</a>');
-        var $newLinkLi = $('<li></li>').append($addTagLink);
+        var $newLinkLi = $('<li class="food-item"></li>').append($addTagLink);
 
         var $foodList = {{ foodList|raw }};
 
@@ -101,7 +128,7 @@
             // Get the ul that holds the collection of tags
             $collectionHolder = $('ul.entryFoods');
 
-            $collectionHolder.find('li').each(function() {
+            $collectionHolder.find('.food-item').each(function() {
                 addTagFormDeleteLink($(this));
                 addNewOption($(this));
             });
@@ -180,6 +207,12 @@
             $tagFormLi.find('select').append($newOption);
         }
 
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script>
+        $('.select2').select2({
+            tags: true
+        });
     </script>
 
 {% endblock %}

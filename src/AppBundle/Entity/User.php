@@ -91,12 +91,18 @@ class User implements UserInterface
      */
     private $foods;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tag", mappedBy="user")
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->correctionFactors = new ArrayCollection();
         $this->ratios = new ArrayCollection();
         $this->entries = new ArrayCollection();
         $this->foods = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -270,6 +276,14 @@ class User implements UserInterface
     public function getFoods()
     {
         return $this->foods;
+    }
+
+    /**
+     * @return ArrayCollection|Tag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
 }

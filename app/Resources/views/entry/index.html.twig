@@ -6,7 +6,7 @@
 
 <p><a href="{{ path('entry_new') }}" class="btn btn-primary pull-right">Add a New Entry</a></p>
 
-        {% for entry in app.user.entries %}
+        {% for entry in entries %}
         <div class="panel">
             <div class="panel-heading">
                 <a href="{{ path('entry_edit', {'id': entry.id}) }}">{{ entry.createdAt|date('F j, Y g:i a') }}</a><br>
@@ -18,6 +18,10 @@
             {% if entry.notes %}
             <br>Notes: {{ entry.notes }}
             {% endif %}
+                {% if entry.tags|length %}<br>Tags: {% endif %}
+                {% for tag in entry.tags %}
+                    <a href="{{ path('entry_tag', {id: tag.id}) }}">{{ tag.name }}</a>{{ not loop|last ? ', ' : '' }}
+                {% endfor %}
             </div>
         </div>
         {% endfor %}

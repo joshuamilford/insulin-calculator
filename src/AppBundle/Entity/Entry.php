@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: milforj
- * Date: 11/11/16
- * Time: 10:06 AM
- */
 
 namespace AppBundle\Entity;
 
@@ -33,7 +27,7 @@ class Entry
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="This is required")
      */
     private $bgl;
 
@@ -44,6 +38,7 @@ class Entry
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Assert\NotBlank(groups={"calculate"}, message="This is required")
      */
     private $ratio;
 
@@ -91,16 +86,21 @@ class Entry
      */
     private $notes;
 
-
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\EntryFood", mappedBy="entry", cascade={"persist"})
      */
     private $entryFoods;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tag", inversedBy="entries")
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->entryFoods = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -264,7 +264,6 @@ class Entry
         foreach ($this->entryFoods as $food) {
             $this->carbs += ($food->getCarbs() * $food->getServings());
         }
-
         $correctionFactors = $this->user->getCorrectionFactors();
         $preCalculated = $this->carbs / $this->ratio;
         $correction = false;
@@ -354,4 +353,16 @@ class Entry
         $this->entryFoods->removeElement($entryFood);
     }
 
+    /**
+     * @return ArrayCollection|Tag[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+//    public function addTag(Tag $tag)
+//    {
+//        $this->tags[] = $tag;
+//    }
 }

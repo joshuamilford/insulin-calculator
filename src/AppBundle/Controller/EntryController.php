@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\EntryFood;
 use AppBundle\Entity\Food;
+use AppBundle\Entity\Tag;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Entry;
@@ -24,7 +26,15 @@ class EntryController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('entry/index.html.twig');
+        $entries = $this->getDoctrine()->getRepository('AppBundle:Entry')
+            ->findBy(
+                ['user' => $this->getUser()],
+                ['createdAt' => 'DESC']
+            );
+
+        return $this->render('entry/index.html.twig', [
+            'entries' => $entries
+        ]);
     }
 
     /**
@@ -50,13 +60,14 @@ class EntryController extends Controller
 
     private function save(Request $request, Entry $entry)
     {
+        $em = $this->getDoctrine()->getManager();
 
         $originalEntryFoods = new ArrayCollection();
         foreach ($entry->getEntryFoods() as $entryFood) {
             $originalEntryFoods->add($entryFood);
         }
 
-        $form = $this->createForm(EntryType::class, $entry);
+        $form = $this->createForm(EntryType::class, $entry, ['em' => $em, 'user' => $this->getUser()]);
 
         $form->handleRequest($request);
         if($form->isValid()) {
@@ -70,20 +81,6 @@ class EntryController extends Controller
 
             if ($form->get('save')->isClicked()) {
 
-                $em = $this->getDoctrine()->getManager();
-
-                $data = $form->getData();
-                foreach ($data->getEntryFoods() as $food) {
-                    if (null === $food->getFood() && !empty($food->getNewFood())) {
-                        $newFood = new Food();
-                        $newFood->setCarbs($food->getCarbs());
-                        $newFood->setName($food->getNewFood());
-                        $newFood->setUser($this->getUser());
-                        $food->setFood($newFood);
-                        $em->persist($newFood);
-                    }
-                }
-
                 foreach ($originalEntryFoods as $entryFood) {
                     if (false === $entry->getEntryFoods()->contains($entryFood)) {
                         $em->remove($entryFood);
@@ -94,7 +91,6 @@ class EntryController extends Controller
                 $em->flush();
 
                 $this->addFlash('success', 'Your entry has been saved.');
-
                 return $this->redirectToRoute('entry_index');
             }
         }
@@ -103,6 +99,18 @@ class EntryController extends Controller
             'form' => $form->createView(),
             'entry' => $entry,
             'foodList' => json_encode($this->getDoctrine()->getRepository('AppBundle:Food')->findAll())
+        ]);
+    }
+
+    /**
+     * @Route("/tag/{id}", name="entry_tag")
+     * @param Tag $tag
+     * @return Response
+     */
+    public function entryTagAction(Tag $tag)
+    {
+        return $this->render('entry/index.html.twig', [
+            'entries' => $tag->getEntries()
         ]);
     }
 }

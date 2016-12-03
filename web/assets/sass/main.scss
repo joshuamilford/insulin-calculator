@@ -40,8 +40,10 @@ form{
 }
 
 html {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
+  font-weight: normal;
+  color: #323232;
 }
 
 .brand {
@@ -103,7 +105,11 @@ html {
 
     li {
       border-bottom: solid 1px $light-blue;
-      padding: .25em 0;
+    }
+
+    a {
+      display: block;
+      padding: .5em 0;
     }
 
     @media(min-width: 600px) {
@@ -112,6 +118,10 @@ html {
         display: inline;
         margin-left: 1em;
         border: 0;
+      }
+
+      a {
+        display: inline-block;
         padding: 0;
       }
     }
@@ -146,75 +156,31 @@ label {
   display: block;
 }
 
-.form-control {
-  border: solid 1px;
-  line-height: 1;
-  font-size: 100%;
-  padding: .5em;
-  width: 100%;
-}
-
-select.form-control {
-  height: 2.25em;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.form-control,
-.btn {
-  border-radius: 2px;
-}
-
 .panel {
   margin-bottom: 1.5em;
-  border: solid 1px $blue;
-  border-radius: 2px;
 }
 
 .panel-heading {
   background: $blue;
   color: #fff;
   padding: .25em .5em;
+  border: solid 1px $blue;
+  border-radius: 2px 2px 0 0;
 }
 
 .panel-body {
   padding: .5em;
+  border: solid 1px #ddd;
+  border-radius: 0 0 2px 2px;
+  background: #fff;
 }
 
 .panel-heading a {
   color: #fff;
 }
 
-.btn {
-  background: transparent;
-  border: solid 1px;
-  text-decoration: none;
-  display: inline-block;
-  line-height: 1;
-  font-size: 100%;
-  padding: .5em 1em;
-  cursor: pointer;
-  color: #323232;
-
-  &:hover {
-    text-decoration: none;
-    background: $light-blue;
-    color: #fff;
-  }
-}
-
-.btn-danger {
-  background: #C82829;
-  color: #fff;
-
-  &:hover {
-    background: transparent;
-    color: #C82829;
-  }
-}
-
 .well {
-  border: solid 1px;
+  border: solid 1px #ddd;
   background: #fff;
   padding: 1.5em;
   border-radius: 2px;
@@ -223,6 +189,10 @@ select.form-control {
 
 .form-row {
   display: flex;
+}
+
+.form-row .btn {
+  margin-top: 1.5em;
 }
 
 .form-column {
@@ -268,4 +238,103 @@ select.form-control {
   .nav-toggle {
     display: none;
   }
+}
+
+.alert {
+  border: solid 1px;
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+  border-radius: 2px;
+  background: #fff;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.alert-success {
+  color: #3aa92e;
+}
+
+.alert-danger {
+  color: #C82829;
+}
+
+.jumbotron {
+  margin-bottom: .5em;
+  font-size: 3em;
+  text-align: center;
+  display: block;
+  line-height: 3em;
+}
+
+.has-error {
+  .form-control {
+    border-color: #C82829;
+  }
+
+  .help-block,
+  label {
+    color: #C82829;
+  }
+}
+
+.btn,
+.form-control,
+.select2{
+  border: solid 1px;
+  font-size: 100%;
+  line-height: 1.5em;
+  padding: .5em;
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.form-control,
+.select2{
+  display: block;
+  width: 100%;
+  background: #fff;
+  -webkit-appearance: none;
+  border-color: #ddd;
+}
+
+.btn {
+  text-decoration: none;
+  display: inline-block;
+  padding: .5em 1em;
+  cursor: pointer;
+  color: #fff;
+  background: $blue;
+  border-color: $blue;
+
+  &:hover {
+    text-decoration: none;
+    background: transparent;
+    color: $blue;
+  }
+}
+
+.btn-danger {
+  background: #C82829;
+  color: #fff;
+  border-color: #C82829;
+
+  &:hover {
+    background: transparent;
+    color: #C82829;
+  }
+}
+
+select.form-control {
+  -webkit-appearance: none;
+}
+
+.select2-container--default .select2-selection--multiple {
+  border: none;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+  //outline: inherit;
 }

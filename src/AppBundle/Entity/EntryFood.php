@@ -49,6 +49,7 @@ class EntryFood
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Food")
+     * @Assert\NotBlank()
      */
     private $food;
 
