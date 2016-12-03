@@ -97,6 +97,7 @@ class EntryType extends AbstractType
                 if (!$tagRepo->find($tag)) {
                     $newTag = new Tag();
                     $newTag->setName($tag);
+                    $newTag->setUser($this->user);
                     $this->em->persist($newTag);
                     $this->em->flush();
                     $data['tags'][$key] = $newTag->getId();
@@ -104,16 +105,18 @@ class EntryType extends AbstractType
             }
         }
 
-        foreach ($data['entryFoods'] as $key=>$food) {
-            if (!empty($food['newFood'])) {
-                $newFood = new Food();
-                $newFood->setCarbs($food['carbs']);
-                $newFood->setName($food['newFood']);
-                $newFood->setUser($this->user);
-                $this->em->persist($newFood);
-                $this->em->flush();
+        if (!empty($data['entryFoods'])) {
+            foreach ($data['entryFoods'] as $key=>$food) {
+                if (!empty($food['newFood'])) {
+                    $newFood = new Food();
+                    $newFood->setCarbs($food['carbs']);
+                    $newFood->setName($food['newFood']);
+                    $newFood->setUser($this->user);
+                    $this->em->persist($newFood);
+                    $this->em->flush();
 
-                $data['entryFoods'][$key]['food'] = $newFood->getId();
+                    $data['entryFoods'][$key]['food'] = $newFood->getId();
+                }
             }
         }
 
